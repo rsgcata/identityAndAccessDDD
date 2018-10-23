@@ -18,15 +18,15 @@ use domain\webLabel\IpAddress;
  * @since      Class available since Release 1.0
  */
 interface IUserAuthNotificationService {
-	/**
-	 * @param UserId $userId
-	 * @param IpAddress $ipAddress
-	 * @param string|null $countryCode
-	 * @param string|null $state
-	 * @param string|null $city
-	 */
-	public function notifyTargetUserOfSuspiciousAuthDetection(
-			UserId $userId, IpAddress $ipAddress, $countryCode, $state, $city);
+    /**
+     * @param UserId $userId
+     * @param IpAddress $ipAddress
+     * @param string|null $countryCode
+     * @param string|null $state
+     * @param string|null $city
+     */
+    public function notifyTargetUserOfSuspiciousAuthDetection(
+            UserId $userId, IpAddress $ipAddress, $countryCode, $state, $city);
 }
 
 ?>

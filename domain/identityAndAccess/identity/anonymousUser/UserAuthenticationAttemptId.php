@@ -17,14 +17,14 @@ use common\domain\AbstractId;
  * @since      Class available since Release 1.0
  */
 class UserAuthenticationAttemptId extends AbstractId {
-	protected function setId($id) {
-		if(is_int($id) || (is_string($id) && ctype_digit($id))) {
-			$this->id = (int) $id;
-		}
-		else {
-			throw new \DomainException('Could not set user authenticated attempt id. Invalid id.');
-		}
-	}
+    protected function setId($id) {
+        if(is_int($id) || (is_string($id) && ctype_digit($id))) {
+            $this->id = (int) $id;
+        }
+        else {
+            throw new \DomainException('Could not set user authenticated attempt id. Invalid id.');
+        }
+    }
 }
 
 ?>

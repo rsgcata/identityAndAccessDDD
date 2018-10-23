@@ -18,22 +18,22 @@ use domain\identityAndAccess\identity\user\actionAuthenticity\UserPhoneNumberVer
  * @since      Class available since Release 1.0
  */
 interface IUserPhoneNumberVerificationService {
-	/**
-	 * Verifies the phone number ownership
-	 * 
-	 * @param PhoneNumber $phoneNumber
-	 * @param UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode
-	 * @return bool
-	 */
-	public function doesVerificationCodePassOwnershipVerification(
-			PhoneNumber $phoneNumber, 
-			UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode);
-	
-	/**
-	 * @param PhoneNumber $phoneNumber
-	 * @return void
-	 */
-	public function sendPhoneNumberVerificationCode(PhoneNumber $phoneNumber);
+    /**
+     * Verifies the phone number ownership
+     * 
+     * @param PhoneNumber $phoneNumber
+     * @param UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode
+     * @return bool
+     */
+    public function doesVerificationCodePassOwnershipVerification(
+            PhoneNumber $phoneNumber, 
+            UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode);
+    
+    /**
+     * @param PhoneNumber $phoneNumber
+     * @return void
+     */
+    public function sendPhoneNumberVerificationCode(PhoneNumber $phoneNumber);
 }
 
 ?>

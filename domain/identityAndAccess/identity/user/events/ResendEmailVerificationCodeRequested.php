@@ -15,7 +15,7 @@ namespace domain\identityAndAccess\identity\user\events;
  * @since      Class available since Release 1.0
  */
 class ResendEmailVerificationCodeRequested extends UserRegistered {
-	
+    
 }
 
 ?>

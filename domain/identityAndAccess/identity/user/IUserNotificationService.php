@@ -20,39 +20,39 @@ use domain\identityAndAccess\identity\user\events\NewPasswordChangeCodeRequested
  * @since      Class available since Release 1.0
  */
 interface IUserNotificationService {
-	/**
-	 * @param UserRegistered $userRegistered
-	 * @return void 
-	 */
-	public function sendByEmailRegistrationVerificationWhen(UserRegistered $userRegistered);
-	
-	/**
-	 * @param ResendEmailVerificationCodeRequested $resendRequested
-	 * @return void 
-	 */
-	public function resendEmailVerificationWhenRequested(
-			ResendEmailVerificationCodeRequested $resendRequested);
-	
-	/**
-	 * @param NewPasswordChangeCodeRequested $newPassRequested
-	 * @return void 
-	 */
-	public function sendPasswordChangeCodeViaEmailWhenRequested(
-			NewPasswordChangeCodeRequested $newPassRequested);
-	
-	/**
-	 * @param NewPasswordChangeCodeRequested $newPassRequested
-	 * @return void 
-	 */
-	public function sendPasswordChangeCodeViaSmsWhenRequested(
-			NewPasswordChangeCodeRequested $newPassRequested);
-	
-	/**
-	 * @param UserEmailAddressChanged $emailChanged
-	 * @return void 
-	 */
-	public function sendEmailVerificationWhenEmailChanged(
-			UserEmailAddressChanged $emailChanged);
+    /**
+     * @param UserRegistered $userRegistered
+     * @return void 
+     */
+    public function sendByEmailRegistrationVerificationWhen(UserRegistered $userRegistered);
+    
+    /**
+     * @param ResendEmailVerificationCodeRequested $resendRequested
+     * @return void 
+     */
+    public function resendEmailVerificationWhenRequested(
+            ResendEmailVerificationCodeRequested $resendRequested);
+    
+    /**
+     * @param NewPasswordChangeCodeRequested $newPassRequested
+     * @return void 
+     */
+    public function sendPasswordChangeCodeViaEmailWhenRequested(
+            NewPasswordChangeCodeRequested $newPassRequested);
+    
+    /**
+     * @param NewPasswordChangeCodeRequested $newPassRequested
+     * @return void 
+     */
+    public function sendPasswordChangeCodeViaSmsWhenRequested(
+            NewPasswordChangeCodeRequested $newPassRequested);
+    
+    /**
+     * @param UserEmailAddressChanged $emailChanged
+     * @return void 
+     */
+    public function sendEmailVerificationWhenEmailChanged(
+            UserEmailAddressChanged $emailChanged);
 }
 
 ?>

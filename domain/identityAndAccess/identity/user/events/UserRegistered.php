@@ -22,88 +22,88 @@ use domain\identityAndAccess\identity\user\UserId;
  * @since      Class available since Release 1.0
  */
 class UserRegistered extends AbstractDomainEvent {
-	/**
-	 * The user id
-	 *
-	 * @var UserId
-	 * @access protected
-	 */
-	protected $userId;
-	
-	/**
-	 * Email Address
-	 *
-	 * @var UserEmailAddress
-	 * @access protected
-	 */
-	protected $emailAddress;
-	
-	/**
-	 * The full name of the user
-	 *
-	 * @var FullName
-	 * @access protected
-	 */
-	protected $fullName;
-	
-	/**
-	 * Email address verification code
-	 *
-	 * @var EmailAddressVerificationCode
-	 * @access protected
-	 */
-	protected $emailAddressVerificationCode;
-	
-	/**
-	 * Domain event object constructor
-	 * 
-	 * @param User $user The newly registered user
-	 *
-	 * @return void
-	 * @throws --
-	 *
-	 * @access public
-	 * @since Method/function available since Release 1.0
-	 */
-	public function __construct(User $user) {
-		parent::__construct();
-		$this->emailAddress = $user->getEmailAddress();
-		$this->emailAddressVerificationCode = $user->getEmailAddressVerificationCode();
-		$this->fullName = $user->getPerson()->getFullName();
-		$this->userId = $user->getId();
-	}
+    /**
+     * The user id
+     *
+     * @var UserId
+     * @access protected
+     */
+    protected $userId;
+    
+    /**
+     * Email Address
+     *
+     * @var UserEmailAddress
+     * @access protected
+     */
+    protected $emailAddress;
+    
+    /**
+     * The full name of the user
+     *
+     * @var FullName
+     * @access protected
+     */
+    protected $fullName;
+    
+    /**
+     * Email address verification code
+     *
+     * @var EmailAddressVerificationCode
+     * @access protected
+     */
+    protected $emailAddressVerificationCode;
+    
+    /**
+     * Domain event object constructor
+     * 
+     * @param User $user The newly registered user
+     *
+     * @return void
+     * @throws --
+     *
+     * @access public
+     * @since Method/function available since Release 1.0
+     */
+    public function __construct(User $user) {
+        parent::__construct();
+        $this->emailAddress = $user->getEmailAddress();
+        $this->emailAddressVerificationCode = $user->getEmailAddressVerificationCode();
+        $this->fullName = $user->getPerson()->getFullName();
+        $this->userId = $user->getId();
+    }
 
-	/**
-	 * 
-	 * @return UserEmailAddress
-	 */
-	public function getEmailAddress() {
-		return $this->emailAddress;
-	}
+    /**
+     * 
+     * @return UserEmailAddress
+     */
+    public function getEmailAddress() {
+        return $this->emailAddress;
+    }
 
-	/**
-	 * 
-	 * @return FullName
-	 */
-	public function getFullName() {
-		return $this->fullName;
-	}
+    /**
+     * 
+     * @return FullName
+     */
+    public function getFullName() {
+        return $this->fullName;
+    }
 
-	/**
-	 * 
-	 * @return EmailAddressVerificationCode
-	 */
-	public function getEmailAddressVerificationCode() {
-		return $this->emailAddressVerificationCode;
-	}
-	
-	/**
-	 * 
-	 * @return UserId
-	 */
-	public function getUserId() {
-		return $this->userId;
-	}
+    /**
+     * 
+     * @return EmailAddressVerificationCode
+     */
+    public function getEmailAddressVerificationCode() {
+        return $this->emailAddressVerificationCode;
+    }
+    
+    /**
+     * 
+     * @return UserId
+     */
+    public function getUserId() {
+        return $this->userId;
+    }
 }
 
 ?>
