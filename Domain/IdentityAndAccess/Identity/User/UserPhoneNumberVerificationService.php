@@ -1,26 +1,18 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
+namespace Domain\IdentityAndAccess\Identity\User;
 
 use Domain\Contact\PhoneNumber;
 use Domain\IdentityAndAccess\Identity\User\ActionAuthenticity\UserPhoneNumberVerificationCode;
 
-interface IUserPhoneNumberVerificationService {
+interface UserPhoneNumberVerificationService
+{
     /**
      * Verifies the phone number ownership
-     *
-     * @param PhoneNumber $phoneNumber
-     * @param UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode
-     * @return bool
      */
     public function doesVerificationCodePassOwnershipVerification(
-            PhoneNumber $phoneNumber,
-            UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode);
+        PhoneNumber $phoneNumber,
+        UserPhoneNumberVerificationCode $userPhoneNumberVerificationCode
+    ): bool;
 
-    /**
-     * @param PhoneNumber $phoneNumber
-     * @return void
-     */
-    public function sendPhoneNumberVerificationCode(PhoneNumber $phoneNumber);
+    public function sendPhoneNumberVerificationCode(PhoneNumber $phoneNumber): void;
 }
-
-?>

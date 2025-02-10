@@ -1,14 +1,11 @@
 {
-    "name": "vendor_name/identityAndAccessDDD",
+    "name": "rsgcata/identityAndAccessDDD",
     "description": "description",
     "minimum-stability": "stable",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Tito",
-            "email": "email@example.com"
-        }
-    ],
+    "license": "MIT",
     "require": {
+        "php": ">=8.3",
+        "ext-ctype": "*",
+        "ext-mbstring": "*"
     }
 }

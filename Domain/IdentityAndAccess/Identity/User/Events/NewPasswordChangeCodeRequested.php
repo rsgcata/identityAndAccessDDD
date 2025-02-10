@@ -1,80 +1,25 @@
 <?php
-namespace domain\identityAndAccess\identity\user\events;
 
-use common\domain\AbstractDomainEvent;
-use domain\contact\FullName;
-use domain\identityAndAccess\identity\user\actionAuthenticity\PasswordChangeCode;
-use domain\identityAndAccess\identity\user\User;
-use domain\identityAndAccess\identity\user\UserEmailAddress;
-use domain\identityAndAccess\identity\user\UserId;
-use domain\identityAndAccess\identity\user\UserPhoneNumber;
+namespace Domain\IdentityAndAccess\Identity\User\Events;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class NewPasswordChangeCodeRequested extends AbstractDomainEvent {
-    /**
-     * The user id
-     *
-     * @var UserId
-     * @access private
-     */
-    private $userId;
-    
-    /**
-     * Email Address
-     *
-     * @var UserEmailAddress
-     * @access private
-     */
-    private $emailAddress;
-    
-    /**
-     * Short description
-     *
-     * @var UserPhoneNumber
-     * @access private
-     */
-    private $phoneNumber;
-    
-    /**
-     * The full name of the user
-     *
-     * @var FullName
-     * @access private
-     */
-    private $fullName;
-    
-    /**
-     * Email address verification code
-     *
-     * @var PasswordChangeCode
-     * @access private
-     */
-    private $passwordChangeCode;
-    
-    /**
-     * Domain event object constructor
-     * 
-     * @param User $user The newly registered user
-     *
-     * @return void
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
-    public function __construct(User $user) {
+use Domain\AbstractDomainEvent;
+use Domain\Contact\FullName;
+use Domain\IdentityAndAccess\Identity\User\ActionAuthenticity\PasswordChangeCode;
+use Domain\IdentityAndAccess\Identity\User\User;
+use Domain\IdentityAndAccess\Identity\User\UserEmailAddress;
+use Domain\IdentityAndAccess\Identity\User\UserId;
+use Domain\IdentityAndAccess\Identity\User\UserPhoneNumber;
+
+class NewPasswordChangeCodeRequested extends AbstractDomainEvent
+{
+    private UserId $userId;
+    private UserEmailAddress $emailAddress;
+    private UserPhoneNumber $phoneNumber;
+    private FullName $fullName;
+    private PasswordChangeCode $passwordChangeCode;
+
+    public function __construct(User $user)
+    {
         parent::__construct();
         $this->emailAddress = $user->getEmailAddress();
         $this->phoneNumber = $user->getPerson()->getPrimaryUserPhoneNumber();
@@ -83,45 +28,28 @@ class NewPasswordChangeCodeRequested extends AbstractDomainEvent {
         $this->userId = $user->getId();
     }
 
-    /**
-     * 
-     * @return UserEmailAddress
-     */
-    public function getEmailAddress() {
+    public function getEmailAddress(): UserEmailAddress
+    {
         return $this->emailAddress;
     }
-    
-    /**
-     * 
-     * @return UserPhoneNumber
-     */
-    public function getPhoneNumber() {
+
+    public function getPhoneNumber(): UserPhoneNumber
+    {
         return $this->phoneNumber;
     }
 
-    /**
-     * 
-     * @return FullName
-     */
-    public function getFullName() {
+    public function getFullName(): FullName
+    {
         return $this->fullName;
     }
 
-    /**
-     * 
-     * @return PasswordChangeCode
-     */
-    public function getPasswordChangeCode() {
+    public function getPasswordChangeCode(): PasswordChangeCode
+    {
         return $this->passwordChangeCode;
     }
-    
-    /**
-     * 
-     * @return UserId
-     */
-    public function getUserId() {
+
+    public function getUserId(): UserId
+    {
         return $this->userId;
     }
 }
-
-?>

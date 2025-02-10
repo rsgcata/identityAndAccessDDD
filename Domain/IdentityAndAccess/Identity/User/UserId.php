@@ -1,21 +1,9 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
 
-use common\domain\AbstractId;
+namespace Domain\IdentityAndAccess\Identity\User;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
+use Domain\AbstractId;
+
 class UserId extends AbstractId {
     protected function setId($id) {
         if(is_int($id) || (is_string($id) && ctype_digit($id))) {
@@ -26,5 +14,3 @@ class UserId extends AbstractId {
         }
     }
 }
-
-?>

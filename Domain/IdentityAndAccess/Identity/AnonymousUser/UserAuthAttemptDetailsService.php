@@ -3,18 +3,15 @@ namespace Domain\IdentityAndAccess\Identity\AnonymousUser;
 
 use Domain\WebLabel\IpAddress;
 
-interface IUserAuthAttemptDetailsService {
-    /**
-     * @param string $userAgent
-     * @return array An array having this format [browserName, os]
-     */
-    public function getUserAgentDetails($userAgent);
+interface UserAuthAttemptDetailsService
+{
+    public function getUserAgentDetails(string $userAgent): array;
 
     /**
      * @param IpAddress[] $ipAddresses
-     * @return array An array having this format [[IpAddress, countryCode, state, city, requiresRetry],]
+     *
+     * @return array An array having this format [[IpAddress, countryCode, state, city,
+     *     requiresRetry],]
      */
-    public function getIpDetailsInBulk(array $ipAddresses);
+    public function getIpDetailsInBulk(array $ipAddresses): array;
 }
-
-?>

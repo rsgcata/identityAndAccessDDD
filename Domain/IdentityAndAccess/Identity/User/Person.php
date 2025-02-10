@@ -1,368 +1,291 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
 
-use common\domain\AbstractValueObject;
-use domain\contact\FullName;
-use domain\contact\PhoneNumber;
+namespace Domain\IdentityAndAccess\Identity\User;
+
+use Domain\Contact\FullName;
+use Domain\Contact\PhoneNumber;
 use DomainException;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class Person extends AbstractValueObject{
-    /**
-     * The full name of the person
-     *
-     * @var FullName
-     * @access private
-     */
-    private $fullName;
-    
-    /**
-     * The main address of the person
-     *
-     * @var UserAddress
-     * @access private
-     */
-    private $address;
-    
+class Person
+{
+    const int MAX_PHONE_NUMBERS = 3;
+
+    private FullName $fullName;
+    private UserAddress $address;
+
     /**
      * THe person's main phone number
      *
      * @var UserPhoneNumber[]
      * @access private
      */
-    private $userPhoneNumbers;
-    
-    /**
-     * @var int
-     * @const
-     */
-    const MAX_PHONE_NUMBERS = 3;
-    
-    private function __construct() {
+    private array $userPhoneNumbers;
+
+    private function __construct()
+    {
     }
-    
+
     /**
      * Create new person value object
-     * 
-     * @param FullName $fullName The full name of the person
      *
-     * @return Person
      * @throws DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public static function create(FullName $fullName) {
+    public static function create(FullName $fullName): self
+    {
         $self = new self();
         $self->setFullName($fullName);
-        $self->setAddress(UserAddress::create(NULL, NULL, NULL, NULL, NULL, NULL));
+        $self->setAddress(UserAddress::create(null, null, null, null, null, null));
         $self->userPhoneNumbers = array();
         return $self;
     }
-    
+
     /**
      * Change the full name
-     * 
-     * @param FullName $fullName
      *
-     * @return void
      * @throws DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function changeFullName(FullName $fullName) {
+    public function changeFullName(FullName $fullName): void
+    {
         $this->setFullName($fullName);
     }
-    
+
     /**
      * Change the address
-     * 
-     * @param UserAddress $address
      *
-     * @return void
      * @throws DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function changeAddress(UserAddress $address) {
+    public function changeAddress(UserAddress $address): void
+    {
         $this->setAddress($address);
     }
-    
+
     /**
-     * @param PhoneNumber $phoneNumber
-     *
-     * @return void
-     * @throws \DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public function addNewUserPhoneNumber(PhoneNumber $phoneNumber) {
+    public function addNewUserPhoneNumber(PhoneNumber $phoneNumber): void
+    {
         $this->addPhoneNumber($phoneNumber);
     }
-    
+
     /**
-     * @param PhoneNumber $phoneNumber
-     *
-     * @return void
-     * @throws \DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public function removePhoneNumber(PhoneNumber $phoneNumber) {
-        if($this->getPrimaryUserPhoneNumber()->getPhoneNumber()->equals($phoneNumber)
-                && count($this->userPhoneNumbers) > 1) {
-            throw new \DomainException('Could not remove user phone number. The phone is set as primary.'
-                    . ' Another primary phone number should be selected first.');
+    public function removePhoneNumber(PhoneNumber $phoneNumber): void
+    {
+        if ($this->getPrimaryUserPhoneNumber()->getPhoneNumber()->equals($phoneNumber)
+            && count($this->userPhoneNumbers) > 1) {
+            throw new DomainException(
+                'Could not remove user phone number. The phone is set as primary.'
+                . ' Another primary phone number should be selected first.'
+            );
         }
-        
-        $phoneRemoved = FALSE;
-        
-        foreach($this->userPhoneNumbers as $k => $userPhone) {
-            if($userPhone->getPhoneNumber()->equals($phoneNumber)) {
+
+        $phoneRemoved = false;
+
+        foreach ($this->userPhoneNumbers as $k => $userPhone) {
+            if ($userPhone->getPhoneNumber()->equals($phoneNumber)) {
                 unset($this->userPhoneNumbers[$k]);
-                $phoneRemoved = TRUE;
+                $phoneRemoved = true;
                 break;
             }
         }
-        
-        if(!$phoneRemoved) {
-            throw new \DomainException('Could not remove user phone number. Inexistent phone number.');
+
+        if (!$phoneRemoved) {
+            throw new DomainException(
+                'Could not remove user phone number. Nonexistent phone number.'
+            );
         }
     }
-    
+
     /**
-     * @param PhoneNumber $phoneNumber
-     *
-     * @return void
-     * @throws \DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public function markPhoneNumberOwnershipAsVerified(PhoneNumber $phoneNumber) {
-        $phoneMarked = TRUE;
-        
-        foreach($this->userPhoneNumbers as $k => $userPhone) {
-            if($userPhone->getPhoneNumber()->equals($phoneNumber)) {
+    public function markPhoneNumberOwnershipAsVerified(PhoneNumber $phoneNumber): void
+    {
+        $phoneMarked = false;
+
+        foreach ($this->userPhoneNumbers as $k => $userPhone) {
+            if ($userPhone->getPhoneNumber()->equals($phoneNumber)) {
                 $this->userPhoneNumbers[$k] = UserPhoneNumber::create(
-                        $userPhone->getPhoneNumber(),
-                        TRUE,
-                        $userPhone->getUsedAsPrimaryPhoneNumber());
-                $phoneMarked = TRUE;
+                    $userPhone->getPhoneNumber(),
+                    true,
+                    $userPhone->getUsedAsPrimaryPhoneNumber());
+                $phoneMarked = true;
                 break;
             }
         }
-        
-        if(!$phoneMarked) {
-            throw new \DomainException('Could not verify user phone number. Inexistent phone number.');
+
+        if (!$phoneMarked) {
+            throw new DomainException(
+                'Could not verify user phone number. Nonexistent phone number.'
+            );
         }
     }
-    
+
     /**
-     * @param PhoneNumber $phoneNumber
-     *
-     * @return void
-     * @throws \DomainException
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public function markPhoneNumberAsPrimary(PhoneNumber $phoneNumber) {
-        $phoneMarked = FALSE;        
+    public function markPhoneNumberAsPrimary(PhoneNumber $phoneNumber): void
+    {
+        $phoneMarked = false;
         $phonesBackup = $this->userPhoneNumbers;
-        
-        foreach($this->userPhoneNumbers as $k => $userPhone) {
-            if($userPhone->getPhoneNumber()->equals($phoneNumber)) {
-                if(!$userPhone->hasOwnershipVerified() ) {
-                    throw new \DomainException('Could not mark phone number as primary.'
-                            . ' Phone number not verified.');
+
+        foreach ($this->userPhoneNumbers as $k => $userPhone) {
+            if ($userPhone->getPhoneNumber()->equals($phoneNumber)) {
+                if (!$userPhone->hasOwnershipVerified()) {
+                    throw new DomainException(
+                        'Could not mark phone number as primary.'
+                        . ' Phone number not verified.');
                 }
-                
+
                 $this->userPhoneNumbers[$k] = UserPhoneNumber::create(
-                        $userPhone->getPhoneNumber(),
-                        $userPhone->getOwnershipVerified(),
-                        TRUE);
-                $phoneMarked = TRUE;
-            }
-            else {
+                    $userPhone->getPhoneNumber(),
+                    $userPhone->getOwnershipVerified(),
+                    true
+                );
+                $phoneMarked = true;
+            } else {
                 $this->userPhoneNumbers[$k] = UserPhoneNumber::create(
-                        $userPhone->getPhoneNumber(),
-                        $userPhone->getOwnershipVerified(),
-                        FALSE);
+                    $userPhone->getPhoneNumber(),
+                    $userPhone->getOwnershipVerified(),
+                    false
+                );
             }
         }
-        
-        if(!$phoneMarked) {
+
+        if (!$phoneMarked) {
             $this->userPhoneNumbers = $phonesBackup;
-            throw new \DomainException('Could not mark phone number as primary.'
-                    . ' Inexistent phone number.');
+            throw new DomainException(
+                'Could not mark phone number as primary. Nonexistent phone number.'
+            );
         }
     }
-    
-    /**
-     * @param PhoneNumber $phoneNumber
-     * @return bool
-     */
-    public function hasPhoneNumber(PhoneNumber $phoneNumber) {
-        foreach($this->userPhoneNumbers as $uph) {
-            if($uph->getPhoneNumber()->equals($phoneNumber)) {
-                return TRUE;
+
+    public function hasPhoneNumber(PhoneNumber $phoneNumber): bool
+    {
+        foreach ($this->userPhoneNumbers as $uph) {
+            if ($uph->getPhoneNumber()->equals($phoneNumber)) {
+                return true;
             }
         }
-        
-        return FALSE;
+
+        return false;
     }
-    
-    /**
-     * @param PhoneNumber $phoneNumber
-     * @return bool
-     */
-    public function hasPhoneNumberVerified(PhoneNumber $phoneNumber) {
-        foreach($this->userPhoneNumbers as $uph) {
-            if($uph->getPhoneNumber()->equals($phoneNumber)) {
+
+    public function hasPhoneNumberVerified(PhoneNumber $phoneNumber): bool
+    {
+        foreach ($this->userPhoneNumbers as $uph) {
+            if ($uph->getPhoneNumber()->equals($phoneNumber)) {
                 return $uph->hasOwnershipVerified();
             }
         }
-        
-        return FALSE;
+
+        return false;
     }
-    
-    /**
-     * Check if this object equals another object
-     * 
-     * @param Person $person
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
-    public function equals(Person $person) {
-        $equalObjects = FALSE;
-        
+
+    public function equals(Person $person): bool
+    {
+        $equalObjects = false;
+
         $phoneMatchedKeys = array();
-        $userPhoneNumbersMatch = TRUE;
-        
-        if(count($this->userPhoneNumbers) === count($person->getUserPhoneNumbers())) {
-            foreach($this->userPhoneNumbers as $userPhone) {
-                $matchFound = FALSE;
-                foreach($person->getUserPhoneNumbers() as $k => $uph) {
-                    if(in_array($k, $phoneMatchedKeys)) {
+        $userPhoneNumbersMatch = true;
+
+        if (count($this->userPhoneNumbers) === count($person->getUserPhoneNumbers())) {
+            foreach ($this->userPhoneNumbers as $userPhone) {
+                $matchFound = false;
+                foreach ($person->getUserPhoneNumbers() as $k => $uph) {
+                    if (in_array($k, $phoneMatchedKeys)) {
                         continue;
                     }
 
-                    if($userPhone->equals($uph)) {
+                    if ($userPhone->equals($uph)) {
                         $phoneMatchedKeys[] = $k;
-                        $matchFound = TRUE;
+                        $matchFound = true;
                     }
                 }
 
-                if(!$matchFound) {
-                    $userPhoneNumbersMatch = FALSE;
+                if (!$matchFound) {
+                    $userPhoneNumbersMatch = false;
                     break;
                 }
             }
-        }            
-        
-        if(self::class === get_class($person)
-                && $userPhoneNumbersMatch
-                && $this->address->equals($person->getAddress()) 
-                && $this->fullName->equals($person->getFullName())) {
-            $equalObjects = TRUE;
         }
-        
+
+        if (self::class === get_class($person)
+            && $userPhoneNumbersMatch
+            && $this->address->equals($person->getAddress())
+            && $this->fullName->equals($person->getFullName())) {
+            $equalObjects = true;
+        }
+
         return $equalObjects;
     }
-    
-    /**
-     * 
-     * @return FullName
-     */
-    public function getFullName() {
+
+    public function getFullName(): FullName
+    {
         return $this->fullName;
     }
-    
-    /**
-     * 
-     * @return UserAddress
-     */
-    public function getAddress() {
+
+    public function getAddress(): UserAddress
+    {
         return $this->address;
     }
-    
-    /**
-     * 
-     * @return UserPhoneNumber[]
-     */
-    public function getUserPhoneNumbers() {
+
+    public function getUserPhoneNumbers(): array
+    {
         return $this->userPhoneNumbers;
     }
-    
-    /**
-     * 
-     * @return UserPhoneNumber
-     */
-    public function getPrimaryUserPhoneNumber() {
+
+    public function getPrimaryUserPhoneNumber(): ?UserPhoneNumber
+    {
         foreach ($this->userPhoneNumbers as $number) {
-            if($number->isUsedAsPrimaryPhoneNumber()) {
+            if ($number->isUsedAsPrimaryPhoneNumber()) {
                 return $number;
             }
         }
+        return null;
     }
 
-    private function setFullName(FullName $fullName) {
-        if($fullName->getFirstName() === NULL || $fullName->getLastName() === NULL) {
-            throw new DomainException('The full name of the person must contain at least a first name '
-                    . 'and a last name. Middle name is optional.');
+    private function setFullName(FullName $fullName): void
+    {
+        if ($fullName->getFirstName() === null || $fullName->getLastName() === null) {
+            throw new DomainException(
+                'The full name of the person must contain at least a first name '
+                . 'and a last name. Middle name is optional.');
         }
-        
+
         $this->fullName = $fullName;
     }
-    
-    private function setAddress(UserAddress $address) {
+
+    private function setAddress(UserAddress $address): void
+    {
         $this->address = $address;
     }
-    
-    private function addPhoneNumber(PhoneNumber $phoneNumber) {
-        foreach($this->userPhoneNumbers as $userPhone) {
-            if($userPhone->getPhoneNumber()->equals($phoneNumber)) {
-                throw new \DomainException('Could not add phone number for person. The phone number'
-                        . ' already exists.');
+
+    private function addPhoneNumber(PhoneNumber $phoneNumber): void
+    {
+        foreach ($this->userPhoneNumbers as $userPhone) {
+            if ($userPhone->getPhoneNumber()->equals($phoneNumber)) {
+                throw new DomainException(
+                    'Could not add phone number for person. The phone number'
+                    . ' already exists.');
             }
         }
-        
-        $primary = (empty($this->userPhoneNumbers)) ? TRUE : FALSE;
-        
+
+        $primary = empty($this->userPhoneNumbers);
+
         $this->userPhoneNumbers[] = UserPhoneNumber::create(
-                $phoneNumber, FALSE, $primary);
+            $phoneNumber,
+            false,
+            $primary);
     }
-    
-    /**
-     * @param FullName $fullName The full name
-     * @param UserAddress $address
-     * @param UserPhoneNumber[] $userPhoneNumbers
-     * @return Person
-     */
+
     public static function reconstitute(
-            FullName $fullName, UserAddress $address, array $userPhoneNumbers) {
+        FullName    $fullName,
+        UserAddress $address,
+        array       $userPhoneNumbers
+    ): Person
+    {
         $self = new self();
         $self->fullName = $fullName;
         $self->address = $address;
@@ -370,5 +293,3 @@ class Person extends AbstractValueObject{
         return $self;
     }
 }
-
-?>

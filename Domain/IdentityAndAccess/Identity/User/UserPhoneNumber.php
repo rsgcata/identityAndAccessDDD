@@ -1,168 +1,106 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
 
-use common\domain\AbstractDomainObject;
-use domain\contact\PhoneNumber;
+namespace Domain\IdentityAndAccess\Identity\User;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class UserPhoneNumber extends AbstractDomainObject {
-    /**
-     * Short description
-     *
-     * @var PhoneNumber
-     * @access private
-     */
-    private $phoneNumber;
-    
-    /**
-     * Short description
-     *
-     * @var bool
-     * @access private
-     */
-    private $ownershipVerified;
-    
-    /**
-     * Short description
-     *
-     * @var bool
-     * @access private
-     */
-    private $usedAsPrimaryPhoneNumber;
-    
-    private function __construct() {
-        
+use Domain\Contact\PhoneNumber;
+use DomainException;
+
+class UserPhoneNumber
+{
+    private PhoneNumber $phoneNumber;
+    private bool $ownershipVerified;
+    private bool $usedAsPrimaryPhoneNumber;
+
+    private function __construct()
+    {
     }
-    
-    /**
-     * Creates a new value object
-     * 
-     * @param PhoneNumber $phoneNumber
-     * @param bool $ownershipVerified
-     * @param bool $usedAsPrimaryPhoneNumber
-     *
-     * @return UserPhoneNumber
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
+
     public static function create(
-            PhoneNumber $phoneNumber, 
-            $ownershipVerified, 
-            $usedAsPrimaryPhoneNumber) {
+        PhoneNumber $phoneNumber,
+        bool        $ownershipVerified,
+        bool        $usedAsPrimaryPhoneNumber
+    ): UserPhoneNumber
+    {
         $self = new self();
         $self->setOwnershipVerified($ownershipVerified);
         $self->setPhoneNumber($phoneNumber);
         $self->setUsedAsPrimaryPhoneNumber($usedAsPrimaryPhoneNumber);
         return $self;
     }
-    
-    /**
-     * Check if this object equals another object
-     * 
-     * @param UserPhoneNumber $userPhoneNumber
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
-    public function equals(UserPhoneNumber $userPhoneNumber) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($userPhoneNumber) 
-                && $this->phoneNumber->equals($userPhoneNumber->getPhoneNumber())
-                && $this->ownershipVerified === $userPhoneNumber->getOwnershipVerified()
-                && $this->usedAsPrimaryPhoneNumber === $userPhoneNumber->getUsedAsPrimaryPhoneNumber()) {
-            $equalObjects = TRUE;
+
+    public function equals(UserPhoneNumber $userPhoneNumber): bool
+    {
+        $equalObjects = false;
+
+        if (static::class === get_class($userPhoneNumber)
+            && $this->phoneNumber->equals($userPhoneNumber->getPhoneNumber())
+            && $this->ownershipVerified === $userPhoneNumber->getOwnershipVerified()
+            && $this->usedAsPrimaryPhoneNumber === $userPhoneNumber->getUsedAsPrimaryPhoneNumber()) {
+            $equalObjects = true;
         }
-        
+
         return $equalObjects;
     }
-    
-    /**
-     * 
-     * @return bool
-     */
-    public function hasOwnershipVerified() {
+
+    public function hasOwnershipVerified(): bool
+    {
         return $this->ownershipVerified;
     }
-    
-    /**
-     * 
-     * @return bool
-     */
-    public function isUsedAsPrimaryPhoneNumber() {
+
+    public function isUsedAsPrimaryPhoneNumber(): bool
+    {
         return $this->usedAsPrimaryPhoneNumber;
     }
-    
-    /**
-     * 
-     * @return PhoneNumber
-     */
-    public function getPhoneNumber() {
+
+    public function getPhoneNumber(): PhoneNumber
+    {
         return $this->phoneNumber;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function getOwnershipVerified() {
+    public function getOwnershipVerified(): bool
+    {
         return $this->ownershipVerified;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function getUsedAsPrimaryPhoneNumber() {
+    public function getUsedAsPrimaryPhoneNumber(): bool
+    {
         return $this->usedAsPrimaryPhoneNumber;
     }
 
-    public function setPhoneNumber(PhoneNumber $phoneNumber) {
+    public function setPhoneNumber(PhoneNumber $phoneNumber): void
+    {
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function setOwnershipVerified($ownershipVerified) {
-        if(!is_bool($ownershipVerified)) {
-            throw new \DomainException('Could not set ownership verified to user phone number. Invalid'
-                    . ' format.');
+    public function setOwnershipVerified($ownershipVerified): void
+    {
+        if (!is_bool($ownershipVerified)) {
+            throw new DomainException(
+                'Could not set ownership verified to user phone number. Invalid format.'
+            );
         }
-        
+
         $this->ownershipVerified = $ownershipVerified;
     }
 
-    public function setUsedAsPrimaryPhoneNumber($usedAsPrimaryPhoneNumber) {
-        if(!is_bool($usedAsPrimaryPhoneNumber)) {
-            throw new \DomainException('Could not set used as primary phone number to user phone number.'
-                    . ' Invalid format.');
+    public function setUsedAsPrimaryPhoneNumber($usedAsPrimaryPhoneNumber): void
+    {
+        if (!is_bool($usedAsPrimaryPhoneNumber)) {
+            throw new DomainException(
+                'Could not set used as primary phone number to user phone number.'
+                . ' Invalid format.'
+            );
         }
-        
+
         $this->usedAsPrimaryPhoneNumber = $usedAsPrimaryPhoneNumber;
     }
-            
-    /**
-     * 
-     * @return UserPhoneNumber
-     */
-    public static function reconstitute(PhoneNumber $phoneNumber, $ownershipVerified, 
-            $usedAsPrimaryPhoneNumber) {
+
+    public static function reconstitute(
+        PhoneNumber $phoneNumber,
+        bool        $ownershipVerified,
+        bool        $usedAsPrimaryPhoneNumber
+    ): self
+    {
         $self = new self();
         $self->phoneNumber = $phoneNumber;
         $self->ownershipVerified = $ownershipVerified;
@@ -171,5 +109,3 @@ class UserPhoneNumber extends AbstractDomainObject {
     }
 
 }
-
-?>

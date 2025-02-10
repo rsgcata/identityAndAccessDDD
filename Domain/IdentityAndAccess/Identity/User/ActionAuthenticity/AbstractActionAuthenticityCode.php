@@ -1,209 +1,118 @@
 <?php
-namespace domain\identityAndAccess\identity\user\actionAuthenticity;
+namespace Domain\IdentityAndAccess\Identity\User\actionAuthenticity;
 
-use common\domain\AbstractValueObject;
+use DateTime;
+use DomainException;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-abstract class AbstractActionAuthenticityCode extends AbstractValueObject {
+abstract class AbstractActionAuthenticityCode
+{
     /**
      * The hashed code
-     *
-     * @var string
-     * @access protected
      */
-    protected $hashedCode;
-    
+    protected string $hashedCode;
+
     /**
      * The code
-     *
-     * @var string
-     * @access protected
      */
-    protected $code;
-    
+    protected string $code;
+
     /**
      * The date and time when the code will expire
-     *
-     * @var \DateTime
-     * @access protected
      */
-    protected $expirationDateTime;
-    
-    protected function __construct() {
+    protected DateTime $expirationDateTime;
+
+    protected function __construct()
+    {
     }
-    
+
     /**
      * Create value object
-     * 
-     * @param string $code The plain code
      *
-     * @return static
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public static function create($code) {
+    public static function create($code): static
+    {
         $self = new static();
         $self->setCode($code);
         $self->hashedCode = $self->protectCode($self->code);
-        $self->setExpirationDateTime(new \DateTime());
+        $self->setExpirationDateTime(new DateTime());
         return $self;
     }
-    
+
     /**
      * Auto generate expired code
-     *
-     * @return static
-     * @throws --
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public static function autoGenerateExpiredCode() {
+    public static function autoGenerateExpiredCode(): static
+    {
         $self = new static();
         $self->code = $self->generateCode();
         $self->hashedCode = $self->protectCode($self->code);
-        $self->setExpirationDateTime(new \DateTime('2000-01-01'));
+        $self->setExpirationDateTime(new DateTime('2000-01-01'));
         return $self;
     }
-    
+
     /**
      * Generates a string code
-     *
-     * @return string
-     * @throws --
-     *
-     * @access protected
-     * @since Method/function available since Release 1.0
      */
-    abstract protected function generateCode();
-    
-    /**
-     * @param string $code The plain code
-     *
-     * @return string
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
-    protected function protectCode($code) {
+    abstract protected function generateCode(): string;
+
+    protected function protectCode(string $code): string
+    {
         return password_hash($code, PASSWORD_DEFAULT);
     }
-    
+
     /**
      * Check if this code equals a given code
-     * 
-     * @param string $code The code to be compared with
-     *
-     * @return bool
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    abstract public function codeEquals($code);
-    
+    abstract public function codeEquals(string $code): bool;
+
     /**
      * Check if this object equals another object
-     * 
-     * @param AbstractActionAuthenticityCode $actionAuthenticityCode
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function equals(AbstractActionAuthenticityCode $actionAuthenticityCode) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($actionAuthenticityCode)
-                && $this->hashedCode === $actionAuthenticityCode->getHashedCode()
-                && $this->expirationDateTime->getTimestamp() 
-                === $actionAuthenticityCode->getExpirationDateTime()->getTimestamp()) {
-            $equalObjects = TRUE;
-        }
-        
-        return $equalObjects;
+    public function equals(AbstractActionAuthenticityCode $actionAuthenticityCode): bool
+    {
+        return static::class === get_class($actionAuthenticityCode) &&
+            $this->hashedCode === $actionAuthenticityCode->getHashedCode() &&
+            $this->expirationDateTime->getTimestamp() ===
+            $actionAuthenticityCode->getExpirationDateTime()->getTimestamp();
     }
-    
+
     /**
      * Checks if the code is expired
-     *
-     * @return bool
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function isExpired() {
-        if($this->expirationDateTime->getTimestamp() < (new \DateTime())->getTimestamp()) {
-            return TRUE;
-        }
-        else {
-            return FALSE;
-        }
+    public function isExpired(): bool
+    {
+        return $this->expirationDateTime->getTimestamp() < (new DateTime())->getTimestamp();
     }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getCode() {
+
+    public function getCode(): string
+    {
         return $this->code;
     }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getHashedCode() {
+
+    public function getHashedCode(): string
+    {
         return $this->hashedCode;
-    }    
-    
-    /**
-     * 
-     * @return \DateTime
-     */
-    public function getExpirationDateTime() {
+    }
+
+    public function getExpirationDateTime(): DateTime
+    {
         return $this->expirationDateTime;
     }
 
-    abstract protected function setCode($code);
-    
-    protected function setExpirationDateTime(\DateTime $expirationDateTime) {        
+    abstract protected function setCode($code): void;
+
+    protected function setExpirationDateTime(DateTime $expirationDateTime): void
+    {
         $this->expirationDateTime = $expirationDateTime;
     }
-    
-    /**
-     * @param string $hashedCode
-     * @param \DateTime $expirationDateTime
-     * @return static
-     */
-    public static function reconstitute($hashedCode, \DateTime $expirationDateTime) {
+
+    public static function reconstitute(string $hashedCode, DateTime $expirationDateTime): static
+    {
         $self = new static();
         $self->hashedCode = $hashedCode;
         $self->expirationDateTime = $expirationDateTime;
         return $self;
     }
-
 }
-
-?>
 

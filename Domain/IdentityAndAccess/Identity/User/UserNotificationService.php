@@ -1,45 +1,30 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
+namespace Domain\IdentityAndAccess\Identity\User;
 
+use Domain\IdentityAndAccess\Identity\User\Events\NewPasswordChangeCodeRequested;
 use Domain\IdentityAndAccess\Identity\User\Events\ResendEmailVerificationCodeRequested;
 use Domain\IdentityAndAccess\Identity\User\Events\UserEmailAddressChanged;
 use Domain\IdentityAndAccess\Identity\User\Events\UserRegistered;
-use Domain\IdentityAndAccess\Identity\User\Events\NewPasswordChangeCodeRequested;
 
-interface UserNotificationService {
-    /**
-     * @param UserRegistered $userRegistered
-     * @return void
-     */
-    public function sendByEmailRegistrationVerificationWhen(UserRegistered $userRegistered);
+interface UserNotificationService
+{
+    public function sendByEmailRegistrationVerificationWhen(UserRegistered $userRegistered): void;
 
-    /**
-     * @param ResendEmailVerificationCodeRequested $resendRequested
-     * @return void
-     */
     public function resendEmailVerificationWhenRequested(
-            ResendEmailVerificationCodeRequested $resendRequested);
+        ResendEmailVerificationCodeRequested $resendRequested
+    ): void;
 
-    /**
-     * @param NewPasswordChangeCodeRequested $newPassRequested
-     * @return void
-     */
     public function sendPasswordChangeCodeViaEmailWhenRequested(
-            NewPasswordChangeCodeRequested $newPassRequested);
+        NewPasswordChangeCodeRequested $newPassRequested
+    ): void;
 
-    /**
-     * @param NewPasswordChangeCodeRequested $newPassRequested
-     * @return void
-     */
     public function sendPasswordChangeCodeViaSmsWhenRequested(
-            NewPasswordChangeCodeRequested $newPassRequested);
+        NewPasswordChangeCodeRequested $newPassRequested
+    ): void;
 
-    /**
-     * @param UserEmailAddressChanged $emailChanged
-     * @return void
-     */
     public function sendEmailVerificationWhenEmailChanged(
-            UserEmailAddressChanged $emailChanged);
+        UserEmailAddressChanged $emailChanged
+    ): void;
 }
 
 ?>

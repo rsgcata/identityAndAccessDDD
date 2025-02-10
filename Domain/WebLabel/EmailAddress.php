@@ -1,131 +1,73 @@
 <?php
-namespace domain\webLabel;
 
-use common\domain\AbstractValueObject;
+namespace Domain\WebLabel;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class EmailAddress extends AbstractValueObject{
-    /**
-     * The email address
-     *
-     * @var string|null
-     * @access protected
-     */
-    protected $emailAddress;
-    
-    protected function __construct() {
+use DomainException;
+
+class EmailAddress
+{
+    protected ?string $emailAddress;
+
+    protected function __construct()
+    {
+        // Left blank specifically to allow factory methods to take full control over object state
+        // consistency
     }
-    
-    /**
-     * Creates a new email address value object
-     * 
-     * @param string|null $emailAddress The email address
-     *
-     * @return static
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
-     */
-    public static function create($emailAddress) {
+
+    public static function create($emailAddress): static
+    {
         $self = new static();
         $self->setEmailAddress($emailAddress);
         return $self;
     }
-    
+
     /**
      * Check if this object equals another object
-     * 
-     * @param EmailAddress $emailAddress
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function equals(EmailAddress $emailAddress) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($emailAddress)
-                && $this->emailAddress === $emailAddress->getEmailAddress()) {
-            $equalObjects = TRUE;
-        }
-        
-        return $equalObjects;
+    public function equals(EmailAddress $emailAddress): bool
+    {
+        return static::class === get_class($emailAddress) &&
+            $this->emailAddress === $emailAddress->getEmailAddress();
     }
-    
-    /**
-     * @return string|null
-     */
-    public function getEmailAddress() {
+
+    public function getEmailAddress(): ?string
+    {
         return $this->emailAddress;
     }
-    
-    /**
-     * @return string|null
-     */
-    public function getWebDomainNamePart() {
-        if($this->emailAddress === NULL) {
-            return NULL;
+
+    public function getWebDomainNamePart(): ?string
+    {
+        if ($this->emailAddress === null) {
+            return null;
         }
-        
+
         return explode('@', $this->emailAddress)[1];
     }
 
     /**
      * Set the email address
-     * 
-     * @param string|null $emailAddress
-     *
-     * @return void
-     * @throws \DomainException
-     *
-     * @access protected
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    protected function setEmailAddress($emailAddress) {
-        if($emailAddress !== NULL) {
-            if(is_string($emailAddress)) {
-                $emailAddress = trim($emailAddress);
+    protected function setEmailAddress(?string $emailAddress): void
+    {
+        if ($emailAddress !== null) {
+            $emailAddress = trim($emailAddress);
+
+            if ($emailAddress === '') {
+                $emailAddress = null;
+            } else if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+                throw new DomainException('Invalid email address');
             }
-            
-            if($emailAddress === '') {
-                $emailAddress = NULL;
-            }
-            else {
-                $this->assert()->emailAddress($emailAddress, 
-                    new \DomainException('Invalid generic email address. Could not set email address.'));
-            }
-            
         }
-        
+
         $this->emailAddress = $emailAddress;
     }
-    
-    /**
-     * 
-     * @return static
-     */
-    public static function reconstitute($emailAddress) {
+
+    public static function reconstitute($emailAddress): static
+    {
         $self = new static();
         $self->emailAddress = $emailAddress;
         return $self;
     }
 
 }
-
-?>

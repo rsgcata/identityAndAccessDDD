@@ -1,111 +1,62 @@
 <?php
-namespace domain\contact;
 
-use common\domain\AbstractValueObject;
+namespace Domain\Contact;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class PhoneNumber extends AbstractValueObject{
-    /**
-     * The phone number
-     *
-     * @var string|null
-     * @access protected
-     */
-    protected $phoneNumber;
-    
-    protected function __construct() {
+use DomainException;
+
+class PhoneNumber
+{
+    protected ?string $phoneNumber;
+
+    protected function __construct()
+    {
     }
-    
+
     /**
      * Create new phone number value object
-     * 
-     * @param string|null $phoneNumber The phone number
      *
-     * @return static
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public static function create($phoneNumber) {
+    public static function create($phoneNumber): static
+    {
         $self = new static();
         $self->setPhoneNumber($phoneNumber);
         return $self;
     }
-    
+
     /**
      * Check if this object equals another object
-     * 
-     * @param PhoneNumber $phoneNumber
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function equals(PhoneNumber $phoneNumber) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($phoneNumber)
-                && $this->phoneNumber === $phoneNumber->getPhoneNumber()) {
-            $equalObjects = TRUE;
-        }
-        
-        return $equalObjects;
+    public function equals(PhoneNumber $phoneNumber): bool
+    {
+        return static::class === get_class($phoneNumber) &&
+            $this->phoneNumber === $phoneNumber->getPhoneNumber();
     }
-    
-    /**
-     * 
-     * @return string|null
-     */
-    public function getPhoneNumber() {
+
+    public function getPhoneNumber(): ?string
+    {
         return $this->phoneNumber;
     }
 
-    protected function setPhoneNumber($phoneNumber) {
-        if($phoneNumber !== NULL) {
-            if(is_numeric($phoneNumber) || is_string($phoneNumber)) {
-                $phoneNumber = trim(str_replace(' ', '', $phoneNumber));
+    protected function setPhoneNumber($phoneNumber): void
+    {
+        if ($phoneNumber !== null) {
+            $phoneNumber = trim(str_replace(' ', '', $phoneNumber));
+
+            if ($phoneNumber === '') {
+                $phoneNumber = null;
+            } else if (preg_match('/^\+?[0-9]{3,20}$/u', $phoneNumber) !== 1) {
+                throw new DomainException('Invalid  phone number. Could not set the phone number.');
             }
-            
-            if($phoneNumber === '') {
-                $phoneNumber = NULL;
-            }
-            else {
-                $this->assert()->intlPhoneNumber($phoneNumber, new \DomainException('Invalid generic phone '
-                        . 'number. Could not set the phone number.'));
-            }
-            
         }
-        
+
         $this->phoneNumber = $phoneNumber;
     }
 
-    /**
-     * 
-     * @return static
-     */
-    public static function reconstitute($phoneNumber) {
+    public static function reconstitute($phoneNumber): static
+    {
         $self = new static();
         $self->phoneNumber = $phoneNumber;
         return $self;
     }
-    
-    
 }
-
-?>

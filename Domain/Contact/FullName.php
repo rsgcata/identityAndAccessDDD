@@ -1,204 +1,162 @@
 <?php
-namespace domain\contact;
 
-use common\domain\AbstractValueObject;
+namespace Domain\Contact;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- * 
- */
-class FullName extends AbstractValueObject{
-    /**
-     * The first name
-     *
-     * @var string|null
-     * @access protected
-     */
-    protected $firstName;
-    
-    /**
-     * The middle name
-     *
-     * @var string|null
-     * @access protected
-     */
-    protected $middleName;
-    
-    /**
-     * The last name
-     *
-     * @var string|null
-     * @access protected
-     */
-    protected $lastName;
-    
-    protected function __construct() {
+use DomainException;
+
+class FullName
+{
+    public const int MIN_NAME_LENGTH = 2;
+    public const int MAX_NAME_LENGTH = 128;
+
+    protected ?string $firstName;
+    protected ?string $middleName;
+    protected ?string $lastName;
+
+    protected function __construct()
+    {
+        // Left blank specifically to allow factory methods to take full control over object state
+        // consistency
     }
-    
+
     /**
      * Create new full name value object
-     * 
-     * @param string|null $firstName The first name
-     * @param string|null $middleName The middle name
-     * @param string|null $lastName The last name
      *
-     * @return static
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public static function create($firstName, $middleName, $lastName) {
+    public static function create(
+        ?string $firstName,
+        ?string $middleName,
+        ?string $lastName
+    ): static
+    {
         $self = new static();
         $self->setFirstName($firstName);
         $self->setLastName($lastName);
         $self->setMiddleName($middleName);
         return $self;
     }
-    
+
     /**
      * Check if this object equals another object
-     * 
-     * @param FullName $fullName
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function equals(FullName $fullName) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($fullName) 
-                && $this->firstName === $fullName->getFirstName()
-                && $this->middleName === $fullName->getMiddleName() 
-                && $this->lastName === $fullName->getLastName()) {
-            $equalObjects = TRUE;
-        }
-        
-        return $equalObjects;
+    public function equals(FullName $fullName): bool
+    {
+        return static::class === get_class($fullName) &&
+            $this->firstName === $fullName->getFirstName() &&
+            $this->middleName === $fullName->getMiddleName() &&
+            $this->lastName === $fullName->getLastName();
     }
-    
+
     /**
      * Check if all descriptors are null
-     *
-     * @return bool
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function hasAllDescriptorsNull() {
-        if($this->firstName === NULL && $this->middleName === NULL && $this->lastName === NULL) {
-            return TRUE;
-        }
-        else {
-            return FALSE;
-        }
+    public function hasAllDescriptorsNull(): bool
+    {
+        return $this->firstName === null &&
+            $this->middleName === null &&
+            $this->lastName === null;
     }
-    
-    /**
-     * 
-     * @return string|null
-     */
-    public function getFirstName() {
+
+    public function getFirstName(): ?string
+    {
         return $this->firstName;
     }
 
-    /**
-     * 
-     * @return string|null
-     */
-    public function getMiddleName() {
+    public function getMiddleName(): ?string
+    {
         return $this->middleName;
     }
 
-    /**
-     * 
-     * @return string|null
-     */
-    public function getLastName() {
+    public function getLastName(): ?string
+    {
         return $this->lastName;
     }
 
-    protected function setFirstName($firstName) {
-        if($firstName !== NULL) {
-            if(is_string($firstName)) {
-                $firstName = ucfirst(trim($firstName));
-            }
-            
-            if($firstName === '') {
-                $firstName = NULL;
-            }
-            else {
-                $this->assert()->intlPersonName($firstName, new \DomainException('Invalid generic first '
-                    . ' name. Could not set first name in the full name.'));
+    protected function assertIntlPersonName(string $value, DomainException $exception): void
+    {
+        if (
+            mb_strlen($value) < static::MIN_NAME_LENGTH ||
+            mb_strlen($value) > static::MAX_NAME_LENGTH ||
+            preg_match(
+                '/^([\p{L}\p{Mn}\p{Pd}]+(\s|-|\'|\x{2019}|\.)?[\p{L}\p{Mn}\p{Pd}]+)+$/u',
+                $value
+            ) !== 1
+        ) {
+            throw $exception;
+        }
+    }
+
+    protected function setFirstName(?string $firstName): void
+    {
+        if ($firstName !== null) {
+            $firstName = ucfirst(trim($firstName));
+
+            if ($firstName === '') {
+                $firstName = null;
+            } else {
+                $this->assertIntlPersonName(
+                    $firstName,
+                    new DomainException(
+                        'Invalid first name. Could not set first name.'
+                    )
+                );
             }
         }
-        
+
         $this->firstName = $firstName;
     }
 
-    protected function setMiddleName($middleName) {
-        if($middleName !== NULL) {
-            if(is_string($middleName)) {
-                $middleName = ucfirst(trim($middleName));
-            }
-            
-            if($middleName === '') {
-                $middleName = NULL;
-            }
-            else {
-                $this->assert()->intlPersonName($middleName, new \DomainException('Invalid generic middle '
-                    . ' name. Could not set middle name in the full name.'));
+    protected function setMiddleName(?string $middleName): void
+    {
+        if ($middleName !== null) {
+            $middleName = ucfirst(trim($middleName));
+
+            if ($middleName === '') {
+                $middleName = null;
+            } else {
+                $this->assertIntlPersonName(
+                    $middleName,
+                    new DomainException(
+                        'Invalid middle name. Could not set middle name.'
+                    )
+                );
             }
         }
-        
+
         $this->middleName = $middleName;
     }
 
-    protected function setLastName($lastName) {
-        if($lastName !== NULL) {
-            if(is_string($lastName)) {
-                $lastName = ucfirst(trim($lastName));
-            }
-            
-            if($lastName === '') {
-                $lastName = NULL;
-            }
-            else {
-                $this->assert()->intlPersonName($lastName, new \DomainException('Invalid generic last name.'
-                    . ' Could not set last name in the full name.'));
+    protected function setLastName(?string $lastName): void
+    {
+        if ($lastName !== null) {
+            $lastName = ucfirst(trim($lastName));
+
+            if ($lastName === '') {
+                $lastName = null;
+            } else {
+                $this->assertIntlPersonName(
+                    $lastName,
+                    new DomainException(
+                        'Invalid last name. Could not set last name.'
+                    )
+                );
             }
         }
-        
+
         $this->lastName = $lastName;
     }
 
-    /**
-     * 
-     * @return FullName
-     */
-    public static function reconstitute($firstName, $middleName, $lastName) {
+    public static function reconstitute(
+        ?string $firstName,
+        ?string $middleName,
+        ?string $lastName
+    ): static
+    {
         $self = new static();
         $self->firstName = $firstName;
         $self->middleName = $middleName;
         $self->lastName = $lastName;
         return $self;
     }
-
 }
-
-?>

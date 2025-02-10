@@ -1,107 +1,68 @@
 <?php
-namespace domain\webLabel;
 
-use \common\domain\AbstractValueObject;
+namespace Domain\WebLabel;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-class IpAddress extends AbstractValueObject{
+use DomainException;
+
+class IpAddress
+{
     /**
      * The internet protocol address
-     *
-     * @var string|null
-     * @access protected
      */
-    protected $ipAddress;
-    
-    protected function __construct() {
+    protected ?string $ipAddress;
+
+    protected function __construct()
+    {
+        // Left blank specifically to allow factory methods to take full control over object state
+        // consistency
     }
-    
+
     /**
      * Create a new ip address value object
-     * 
-     * @param string|null $ipAddress The ip address
-     *
-     * @return static
-     * @throws \DomainException
-     *
-     * @static
-     * @access public
-     * @since Method/function available since Release 1.0
+     * @throws DomainException
      */
-    public static function create($ipAddress) {
-        $self = new static();        
+    public static function create($ipAddress): static
+    {
+        $self = new static();
         $self->setIpAddress($ipAddress);
         return $self;
     }
-    
+
     /**
      * Check if this object equals another object
-     * 
-     * @param IpAddress $ipAddress
-     *
-     * @return boolean
-     * @throws --
-     *
-     * @access public
-     * @since Method/function available since Release 1.0
      */
-    public function equals(IpAddress $ipAddress) {
-        $equalObjects = FALSE;
-        
-        if(static::class === get_class($ipAddress)
-                && $this->ipAddress === $ipAddress->getIpAddress()) {
-            $equalObjects = TRUE;
-        }
-        
-        return $equalObjects;
+    public function equals(IpAddress $ipAddress): bool
+    {
+        return static::class === get_class($ipAddress) &&
+            $this->ipAddress === $ipAddress->getIpAddress();
     }
-    
-    /**
-     * @return string|null
-     */
-    public function getIpAddress() {
+
+    public function getIpAddress(): ?string
+    {
         return $this->ipAddress;
     }
 
-    protected function setIpAddress($ipAddress) {
-        if($ipAddress !== NULL) {
-            if(is_string($ipAddress)) {
-                $ipAddress = trim($ipAddress);
-            }
-            
-            if($ipAddress === '') {
-                $ipAddress = NULL;
-            }
-            else {
-                $this->assert()->ipAddress($ipAddress, new \DomainException('Invalid generic ip address.'
-                        . ' Could not set the ip address.'));
+    protected function setIpAddress($ipAddress): void
+    {
+        if ($ipAddress !== null) {
+            $ipAddress = trim($ipAddress);
+
+            if ($ipAddress === '') {
+                $ipAddress = null;
+            } else {
+                if (!filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                    throw new DomainException('Invalid IP address');
+                }
             }
         }
+
         $this->ipAddress = $ipAddress;
     }
 
-    /**
-     * 
-     * @return static
-     */
-    public static function reconstitute($ipAddress) {
+    public static function reconstitute($ipAddress): static
+    {
         $self = new static();
         $self->ipAddress = $ipAddress;
         return $self;
     }
-
 }
-
-?>

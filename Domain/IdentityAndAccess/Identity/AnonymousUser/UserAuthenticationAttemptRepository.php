@@ -1,83 +1,49 @@
 <?php
-namespace domain\identityAndAccess\identity\anonymousUser;
+namespace Domain\IdentityAndAccess\Identity\AnonymousUser;
 
-use domain\webLabel\IpAddress;
+use Domain\WebLabel\IpAddress;
 
-/**
- *
- * Short description
- *
- * Long description
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
-interface UserAuthenticationAttemptRepository {
-    /**
-     * @param UserAuthenticationAttemptId $id
-     * @return UserAuthenticationAttempt|null
-     */
-    public function findById(UserAuthenticationAttemptId $id);
+interface UserAuthenticationAttemptRepository
+{
+    public function findById(UserAuthenticationAttemptId $id): ?UserAuthenticationAttempt;
 
     /**
      * @param UserAuthenticationAttemptId[] $ids
+     *
      * @return UserAuthenticationAttempt[]
      */
     public function findAllByIdCollection(array $ids);
 
     /**
-     *
-     * @param AuthenticationDetailsStatus $detailsStatus
-     * @param int $limit
-     * @param int $offset
      * @return UserAuthenticationAttempt[]
      */
-    public function findAllForDetailsFilling(AuthenticationDetailsStatus $detailsStatus, $limit, $offset);
+    public function findAllForDetailsFilling(
+        AuthenticationDetailsStatus $detailsStatus,
+        int                         $limit,
+        int                         $offset
+    );
 
     /**
-     * @param IpAddress $ipAddress
-     * @param int $limit
      * @return UserAuthenticationAttempt[]
      */
-    public function findForUserAuthentication(IpAddress $ipAddress, $limit);
+    public function findForUserAuthentication(IpAddress $ipAddress, int $limit): array;
+
+    public function findLastOneForTargetUserId(TargetUserId $targetUserId
+    ): ?UserAuthenticationAttempt;
 
     /**
-     * @param TargetUserId $targetUserId
-     * @return UserAuthenticationAttempt|null
-     */
-    public function findLastOneForTargetUserId(TargetUserId $targetUserId);
-
-    /**
-     * @param TargetUserId $targetUserId
-     * @param string $countryCodeDetail
-     * @param \DateTime $startingDateTime
      * @return UserAuthenticationAttempt[]
      */
     public function findAllByUserIdCountryCodeDetailAndStartingDateTime(
-            TargetUserId $targetUserId, $countryCodeDetail, \DateTime $startingDateTime);
+        TargetUserId $targetUserId,
+        string       $countryCodeDetail,
+        \DateTime    $startingDateTime
+    ): array;
 
-    /**
-     * @param TargetUserId $targetUserId
-     * @return int
-     */
-    public function countNonEmptyCountryDetailAttemptsForTargetUserId(TargetUserId $targetUserId);
+    public function countNonEmptyCountryDetailAttemptsForTargetUserId(TargetUserId $targetUserId): int;
 
-    /**
-     * @param UserAuthenticationAttempt $userAuthenticationAttempt
-     * @return void
-     */
-    public function saveNew(UserAuthenticationAttempt $userAuthenticationAttempt);
+    public function saveNew(UserAuthenticationAttempt $userAuthenticationAttempt): void;
 
-    /**
-     * @param UserAuthenticationAttempt $userAuthenticationAttempt
-     * @return void
-     */
-    public function saveModificationsFor(UserAuthenticationAttempt $userAuthenticationAttempt);
+    public function saveModificationsFor(UserAuthenticationAttempt $userAuthenticationAttempt): void;
 
 }
-
-?>
