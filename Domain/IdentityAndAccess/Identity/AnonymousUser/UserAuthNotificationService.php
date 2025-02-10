@@ -1,7 +1,7 @@
 <?php
-namespace domain\identityAndAccess\identity\anonymousUser;
+namespace Domain\IdentityAndAccess\Identity\AnonymousUser;
 
-use domain\identityAndAccess\identity\user\UserId;
+use Domain\IdentityAndAccess\Identity\User\UserId;
 use domain\webLabel\IpAddress;
 
 /**

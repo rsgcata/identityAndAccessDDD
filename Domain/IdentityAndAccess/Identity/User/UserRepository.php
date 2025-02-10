@@ -1,5 +1,5 @@
 <?php
-namespace domain\identityAndAccess\identity\user;
+namespace Domain\IdentityAndAccess\Identity\User;
 
 /**
  *

@@ -1,10 +1,10 @@
 <?php
-namespace domain\identityAndAccess\access;
+namespace Domain\IdentityAndAccess\Access;
 
-use domain\identityAndAccess\identity\user\User;
+use Domain\IdentityAndAccess\Identity\User\User;
 use domain\identityAndAccess\identity\anonymousUser\UserAuthenticationAttempt;
 use domain\identityAndAccess\identity\anonymousUser\UserAuthenticationAttemptId;
-use domain\identityAndAccess\identity\user\UserPhoneNumber;
+use Domain\IdentityAndAccess\Identity\User\UserPhoneNumber;
 
 /**
  *

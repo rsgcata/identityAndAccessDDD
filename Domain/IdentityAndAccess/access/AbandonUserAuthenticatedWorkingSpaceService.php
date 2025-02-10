@@ -1,19 +1,7 @@
 <?php
-namespace domain\identityAndAccess\access;
 
-/**
- *
- * Short description 
- *
- * Long description 
- *
- * @category   --
- * @package    --
- * @license    --
- * @version    1.0
- * @link       --
- * @since      Class available since Release 1.0
- */
+namespace Domain\IdentityAndAccess\Access;
+
 class AbandonUserAutheticatedWorkingSpaceService {
     /**
      * The working space service of the user
@@ -22,11 +10,11 @@ class AbandonUserAutheticatedWorkingSpaceService {
      * @access private
      */
     private $userWorkingSpaceService;
-    
+
     public function __construct(IUserWorkingSpaceService $userWorkingSpaceService) {
         $this->userWorkingSpaceService = $userWorkingSpaceService;
     }
-    
+
     /**
      * @param string $arg1 description
      *

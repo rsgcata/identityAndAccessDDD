@@ -1,0 +1,14 @@
+{
+    "name": "vendor_name/identityAndAccessDDD",
+    "description": "description",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Tito",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+    }
+}
